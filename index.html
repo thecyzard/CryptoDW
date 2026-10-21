@@ -301,6 +301,65 @@ html[data-theme="light"][data-palette="ipay-default"] .page-heading:after,
 html:not([data-theme="dark"])[data-palette="ipay-default"] .page-heading:after {height:4px;box-shadow:0 2px 10px rgba(0,112,255,.16)}
 @media(prefers-reduced-motion:reduce){html[data-palette="ipay-default"] *,html[data-palette="ipay-default"] *:before,html[data-palette="ipay-default"] *:after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
 
+
+
+/* Ipay responsive + mobile keyboard-safe refinements (presentation only) */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: 84px; }
+body { min-width: 0; overflow-x: clip; }
+img, video, canvas, svg { max-width: 100%; }
+input, select, textarea, button { max-width: 100%; }
+input, select, textarea { font-size: 16px; } /* avoids iOS auto-zoom when focusing fields */
+.wrap, main, section, article, .panel, .card, .feature, .hero-card { min-width: 0; }
+pre, code, td, th, p, h1, h2, h3, label, .hint, .notice { overflow-wrap: anywhere; }
+.modalback { overscroll-behavior: contain; }
+#authModal { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom)); overflow-x: hidden; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+#authModal.hidden { display: none !important; }
+#authModal .modal { width: min(520px, 100%); max-width: 100%; max-height: calc(100vh - 24px); max-height: calc(100dvh - max(24px, env(safe-area-inset-top) + env(safe-area-inset-bottom))); overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; margin: auto; }
+#authModal #authForm, #authModal .formgrid, #authModal .field { min-width: 0; width: 100%; }
+#authModal .formgrid { grid-template-columns: minmax(0, 1fr); }
+#authModal input, #authModal select, #authModal textarea { width: 100%; min-width: 0; min-height: 44px; scroll-margin-block: 18px; }
+#authModal button { min-height: 42px; }
+:where(button, a, input, select, textarea) { touch-action: manipulation; }
+@media (max-width: 850px) {
+  .wrap { width: min(100% - 24px, 1160px); }
+  .hero, .featuregrid, .howgrid, .companygrid, .footergrid, .stats, .admin-quickgrid { min-width: 0; }
+  .hero > *, .footergrid > *, .featuregrid > *, .howgrid > *, .companygrid > * { min-width: 0; }
+  .panel { padding: clamp(14px, 3vw, 22px); }
+  table { max-width: 100%; }
+  .table-wrap, .table-responsive, .admin-content { max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}
+@media (max-width: 560px) {
+  .wrap { width: calc(100% - 24px); }
+  .nav { min-width: 0; }
+  .navactions { min-width: 0; flex-wrap: wrap; justify-content: flex-end; }
+  .navactions .btn { min-height: 40px; }
+  .langselect { max-width: 92px; }
+  h1 { font-size: clamp(30px, 8vw, 39px); line-height: 1.12; overflow-wrap: anywhere; }
+  h2 { font-size: clamp(21px, 5.5vw, 28px); }
+  .hero, .section { min-width: 0; }
+  .hero-card, .panel, .requestcard { padding: 14px; }
+  .formgrid { grid-template-columns: minmax(0, 1fr) !important; }
+  .field, .field.full { grid-column: 1 / -1; }
+  .toolbar { flex-wrap: wrap; }
+  .toolbar > *, .toolbar input, .toolbar select { min-width: 0; max-width: 100%; }
+  .requestmeta { grid-template-columns: minmax(0, 1fr); }
+  .toast { right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); max-width: calc(100% - 24px); }
+  #authModal { place-items: start center; padding: max(8px, env(safe-area-inset-top)) 8px max(8px, env(safe-area-inset-bottom)); }
+  #authModal .modal { width: 100%; max-height: calc(100vh - 16px); max-height: calc(100dvh - max(16px, env(safe-area-inset-top) + env(safe-area-inset-bottom))); border-radius: 16px; padding: 16px; margin: 0 auto; }
+  #authModal .modalhead { position: sticky; top: -16px; z-index: 2; background: var(--surface); padding: 4px 0 10px; }
+  #authModal .modalhead h2 { font-size: 21px; }
+}
+@media (max-width: 360px) {
+  .wrap { width: calc(100% - 18px); }
+  .nav { gap: 5px; }
+  .navactions { gap: 4px; }
+  .navactions .btn { padding: 8px; font-size: 11px; }
+  .langselect { width: 76px; max-width: 76px; }
+  #authModal .modal { padding: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; }
+}
 </style>
 </head>
 <body>
@@ -699,5 +758,51 @@ window.addEventListener("hashchange",()=>{const h=location.hash.replace(/^#/,"")
 async function init(){if(!CONFIGURED||!window.supabase){companies=fallbackCompanies;renderCompanies();renderLiveTracking();$("requestGuest").classList.remove("hidden");$("requestAuthBtn").addEventListener("click",()=>{openAuth();$("authError").textContent="The service is temporarily unavailable. Please contact support."});return}sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});await loadCompanies();await loadSettings();await loadPaymentAccounts();sb.auth.onAuthStateChange(()=>setTimeout(syncSession,0));await syncSession();renderLiveTracking();if(!window.__depozitiFallbackPoll){window.__depozitiFallbackPoll=setInterval(refreshLiveDataFallback,30000)}}
 const initialPage=location.hash.replace(/^#/,"");if(["home","companies","how","request","transactions","myRequestsSection","admin"].includes(initialPage))showPage(initialPage==="myRequestsSection"?"transactions":initialPage,false);else showPage("home",false);
 init().catch(err=>{console.error(err);toast("The service could not start. Please refresh the page or try again later.",true)});
+</script>
+<script>
+
+/* Keep the sign-in dialog and focused field visible while mobile keyboards open. */
+(function () {
+  var modal = document.getElementById('authModal');
+  if (!modal) return;
+  var activeField = null;
+  function syncVisibleViewport() {
+    if (!window.visualViewport) return;
+    var vv = window.visualViewport;
+    modal.style.setProperty('--ipay-vv-height', Math.max(160, vv.height) + 'px');
+    modal.style.setProperty('--ipay-vv-top', Math.max(0, vv.offsetTop) + 'px');
+    if (activeField && !modal.classList.contains('hidden')) {
+      window.setTimeout(function () {
+        if (!activeField || modal.classList.contains('hidden')) return;
+        try { activeField.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'auto' }); } catch (_) {}
+      }, 80);
+    }
+  }
+  modal.addEventListener('focusin', function (event) {
+    if (event.target && /^(INPUT|TEXTAREA|SELECT)$/.test(event.target.tagName)) {
+      activeField = event.target;
+      syncVisibleViewport();
+      window.setTimeout(function () {
+        if (activeField && !modal.classList.contains('hidden')) {
+          try { activeField.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'auto' }); } catch (_) {}
+        }
+      }, 250);
+    }
+  });
+  modal.addEventListener('focusout', function () {
+    window.setTimeout(function () {
+      if (!modal.contains(document.activeElement)) activeField = null;
+    }, 100);
+  });
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', syncVisibleViewport);
+    window.visualViewport.addEventListener('scroll', syncVisibleViewport);
+  }
+  window.addEventListener('resize', syncVisibleViewport);
+  var style = document.createElement('style');
+  style.textContent = '#authModal{top:var(--ipay-vv-top,0px);height:var(--ipay-vv-height,100dvh);height:var(--ipay-vv-height,100vh)} #authModal .modal{max-height:calc(var(--ipay-vv-height,100dvh) - 20px)}';
+  document.head.appendChild(style);
+  syncVisibleViewport();
+})();
 </script>
 </body></html>
