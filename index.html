@@ -493,6 +493,86 @@ input, select, textarea { max-width: 100%; }
 }
 @media(max-width:360px){.mobile-bottom-nav small{font-size:8px}.mobile-bottom-nav span{font-size:18px}.mobile-bottom-nav{left:5px;right:5px;gap:0;padding:6px 2px}}
 </style>
+
+<style id="mobile-native-select-fix">
+/* Mobile fix: keep form dropdowns native so Android/iOS can open the system picker. */
+select, select:focus, select:active {
+  -webkit-appearance: menulist !important;
+  appearance: auto !important;
+  pointer-events: auto !important;
+  touch-action: auto !important;
+  user-select: auto !important;
+  -webkit-tap-highlight-color: transparent;
+}
+select option { color: #111827; background-color: #ffffff; }
+@media (max-width: 760px) {
+  #requestForm select, #adminSection select, #paymentAccountForm select,
+  .toolbar select, .field select {
+    display: block !important;
+    position: relative;
+    z-index: 2;
+    min-height: 46px;
+    font-size: 16px !important;
+    line-height: 1.35;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  .field:focus-within { position: relative; z-index: 5; }
+  #requestForm .field, #requestForm .formgrid { min-width: 0; overflow: visible; }
+  #requestForm .panel, #requestForm, #requestForm .field { transform: none; filter: none; }
+  select:focus { outline: 2px solid var(--brand); outline-offset: 1px; }
+}
+
+/* Transaction presentation refinement: preserve existing data/actions, present as calm cards on small screens. */
+#myRequests{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;min-width:0}
+#myRequests .requestcard{margin:0;min-width:0;box-shadow:none;transition:border-color .18s,background .18s}
+#myRequests .requestcard:hover{border-color:color-mix(in srgb,var(--brand) 45%,var(--line))}
+#myRequests .requesttop>div{min-width:0;overflow-wrap:anywhere}
+#myRequests .requesttop>div>strong{font-size:14px;letter-spacing:.01em}
+#myRequests .requestmeta>div{min-width:0;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface2)}
+#myRequests .requestmeta span{display:block;font-size:11px;margin-bottom:3px}
+#myRequests .notice{margin-top:12px;overflow-wrap:anywhere}
+#liveTrackingContent{display:grid;gap:9px;position:relative}
+#liveTrackingContent .mockrow{display:grid;grid-template-columns:38px minmax(0,1fr);align-items:start;gap:10px;padding:12px;border:1px solid var(--line);border-radius:13px;background:var(--surface2);min-width:0}
+#liveTrackingContent .mockrow .grow{min-width:0;overflow-wrap:anywhere}
+#liveTrackingContent .mockrow .live-status{grid-column:2;justify-self:start;white-space:normal;max-width:100%;overflow-wrap:anywhere}
+#liveTrackingContent .mockrow:last-child{border:1px solid var(--line)}
+#adminSection .tablewrap{max-height:none;overflow:visible}
+@media(max-width:760px){
+ #adminSection .admin-table-panel{min-width:0}
+ #adminSection .admin-content{overflow-x:visible!important;min-width:0}
+ #adminSection .tablewrap{border:0;border-radius:0;overflow:visible;max-height:none}
+ #adminSection .tablewrap table{display:block;width:100%;min-width:0;border:0}
+ #adminSection .tablewrap thead{display:none}
+ #adminSection .tablewrap tbody{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;width:100%}
+ #adminSection .tablewrap tbody tr{display:grid;grid-template-columns:minmax(0,1fr);gap:0;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden;box-shadow:none;min-width:0}
+ #adminSection .tablewrap tbody tr td{display:grid;grid-template-columns:minmax(96px,34%) minmax(0,1fr);gap:10px;align-items:start;width:100%;min-width:0;padding:11px 12px;border-bottom:1px solid var(--line);font-size:12px;overflow-wrap:anywhere}
+ #adminSection .tablewrap tbody tr td:before{font-size:10px;line-height:1.45;font-weight:750;letter-spacing:.035em;text-transform:uppercase;color:var(--muted);content:"Transaction"}
+ #adminSection .tablewrap tbody tr td:nth-child(2):before{content:"Customer"}
+ #adminSection .tablewrap tbody tr td:nth-child(3):before{content:"Platform / type / network"}
+ #adminSection .tablewrap tbody tr td:nth-child(4):before{content:"Amount"}
+ #adminSection .tablewrap tbody tr td:nth-child(5):before{content:"Destination / account"}
+ #adminSection .tablewrap tbody tr td:nth-child(6):before{content:"Payment TXID"}
+ #adminSection .tablewrap tbody tr td:nth-child(7):before{content:"Payment method"}
+ #adminSection .tablewrap tbody tr td:nth-child(8):before{content:"Status / actions"}
+ #adminSection .tablewrap tbody tr td:last-child{border-bottom:0;grid-template-columns:1fr;gap:8px;background:var(--surface2)}
+ #adminSection .tablewrap tbody tr td:last-child:before{margin-bottom:2px}
+ #adminSection .tablewrap tbody tr td[colspan]{display:block;text-align:center;padding:22px}
+ #adminSection .tablewrap tbody tr td[colspan]:before{content:none}
+ #adminSection .tablewrap select,#adminSection .tablewrap textarea,#adminSection .tablewrap input{width:100%;min-width:0;max-width:100%}
+ #adminSection .tablewrap .btn{width:100%;min-height:40px}
+ #adminSection .tablewrap .hint{overflow-wrap:anywhere}
+ #liveTrackingCard .bigamount{font-size:25px;margin:17px 0 4px}
+ #liveTrackingCard .cardhead{align-items:flex-start}
+ #myRequests .requestmeta{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+}
+@media(max-width:380px){
+ #adminSection .tablewrap tbody tr td{grid-template-columns:minmax(0,1fr);gap:5px}
+ #myRequests .requestmeta{grid-template-columns:minmax(0,1fr)}
+ #liveTrackingContent .mockrow{grid-template-columns:32px minmax(0,1fr);padding:10px}
+}
+
+</style>
 </head>
 <body>
 <header class="topbar"><div class="wrap nav">
@@ -847,7 +927,7 @@ const ADMIN_HIDDEN_KEY="depoziti_admin_hidden_transactions_v1";
 let showHiddenAdminRequests=false;
 function getHiddenAdminIds(){try{return new Set(JSON.parse(localStorage.getItem(ADMIN_HIDDEN_KEY)||"[]"))}catch{return new Set()}}
 function setAdminRequestHidden(id,hidden){const ids=getHiddenAdminIds();if(hidden){ids.add(id);showHiddenAdminRequests=false}else ids.delete(id);localStorage.setItem(ADMIN_HIDDEN_KEY,JSON.stringify([...ids]));renderAdminRows();toast(hidden?"Hidden from this admin list. Database record is unchanged.":"Transaction restored to this list")}
-function renderAdminRows(){const search=($("adminSearch").value||"").toLowerCase(),filter=$("adminStatusFilter").value,typeFilter=$("adminTypeFilter")?.value||"",hidden=getHiddenAdminIds();const list=requests.filter(r=>(showHiddenAdminRequests||!hidden.has(r.id))&&(!filter||r.status===filter)&&(!typeFilter||r.request_type===typeFilter)&&[r.reference,r.customer_name,r.customer_email,r.company_account_id,r.payment_txid].some(v=>String(v||"").toLowerCase().includes(search)));$("adminRows").innerHTML=list.map(r=>{const selected=r.payment_account_id||r.payment_account_snapshot?.id||"";const methodOptions='<option value="">No payment method linked</option>'+paymentAccounts.map(a=>`<option value="${esc(a.id)}" ${a.id===selected?"selected":""}>${esc(a.label||a.provider||"Payment method")} — ${a.active?"Active":"Inactive / historical"}</option>`).join("");return `<tr><td><strong>${esc(r.reference)}</strong><br><span class="hint">${new Date(r.created_at).toLocaleString()}</span></td><td>${esc(r.customer_name)}<br><span class="hint">${esc(r.customer_email)}</span></td><td>${esc(r.companies?.name||companyName(r.company_id))}<br>${esc(tr(r.request_type==="withdrawal"?"withdrawalRequest":"depositRequest"))}<br><span class="hint">${esc(r.network)}</span></td><td><strong>${formatAmount(r.amount)}</strong></td><td><span title="${esc(r.destination_details)}">${esc(r.company_account_id)}</span><br><span class="hint">${esc(r.destination_details).slice(0,90)}</span></td><td>${r.payment_txid?`<code style="overflow-wrap:anywhere">${esc(r.payment_txid)}</code>`:"—"}</td><td>${r.request_type==="deposit"?`<select class="payment-method-select" data-request-payment-id="${esc(r.id)}">${methodOptions}</select><div class="hint">Link the method actually used; this saves a snapshot for the customer.</div>`:`<span class="hint">Payout details are provided by the customer.</span>`}</td><td><select class="statusselect" data-status-id="${esc(r.id)}">${["pending_payment","payment_submitted","payment_confirmed","processing","completed","rejected","cancelled"].map(s=>`<option value="${s}" ${s===r.status?"selected":""}>${statusLabel(s)}</option>`).join("")}</select><textarea data-note-id="${esc(r.id)}" placeholder="Admin note" style="margin-top:6px;min-height:54px">${esc(r.admin_note||"")}</textarea><input data-payout-id="${esc(r.id)}" placeholder="Payout TXID (optional)" value="${esc(r.payout_txid||"")}" style="margin-top:6px"><button class="btn primary" data-save-id="${esc(r.id)}" style="margin-top:6px;padding:7px 9px">Save</button><button class="btn" data-hide-request-id="${esc(r.id)}" data-is-hidden="${getHiddenAdminIds().has(r.id)?"true":"false"}" style="margin-top:6px;padding:7px 9px">${getHiddenAdminIds().has(r.id)?"Restore to list":"Hide from list"}</button></td></tr>`}).join("")||'<tr><td colspan="8" class="empty">No matching transactions.</td></tr>';document.querySelectorAll("[data-save-id]").forEach(b=>b.addEventListener("click",()=>updateAdminRequest(b.dataset.saveId)));document.querySelectorAll("[data-hide-request-id]").forEach(b=>b.addEventListener("click",()=>setAdminRequestHidden(b.dataset.hideRequestId,b.dataset.isHidden!=="true")));const toggle=$("toggleHiddenRequests");if(toggle)toggle.textContent=showHiddenAdminRequests?"Hide archived from view":"Show hidden"}
+function renderAdminRows(){const search=($("adminSearch").value||"").toLowerCase(),filter=$("adminStatusFilter").value,typeFilter=$("adminTypeFilter")?.value||"",hidden=getHiddenAdminIds();const list=requests.filter(r=>(showHiddenAdminRequests||!hidden.has(r.id))&&(!filter||r.status===filter)&&(!typeFilter||r.request_type===typeFilter)&&[r.reference,r.customer_name,r.customer_email,r.company_account_id,r.payment_txid].some(v=>String(v||"").toLowerCase().includes(search)));$("adminRows").innerHTML=list.map(r=>{const selected=r.payment_account_id||r.payment_account_snapshot?.id||"";const methodOptions='<option value="">No payment method linked</option>'+paymentAccounts.map(a=>`<option value="${esc(a.id)}" ${a.id===selected?"selected":""}>${esc(a.label||a.provider||"Payment method")} — ${a.active?"Active":"Inactive / historical"}</option>`).join("");return `<tr><td><strong>${esc(r.reference)}</strong><br><span class="hint">${new Date(r.created_at).toLocaleString()}</span></td><td>${esc(r.customer_name)}<br><span class="hint">${esc(r.customer_email)}</span></td><td>${esc(r.companies?.name||companyName(r.company_id))}<br>${esc(tr(r.request_type==="withdrawal"?"withdrawalRequest":"depositRequest"))}<br><span class="hint">${esc(r.network)}</span></td><td><strong>${formatAmount(r.amount)}</strong></td><td><span title="${esc(r.destination_details)}">${esc(r.company_account_id)}</span><br><span class="hint">${esc(r.destination_details)}</span></td><td>${r.payment_txid?`<code style="overflow-wrap:anywhere">${esc(r.payment_txid)}</code>`:"—"}</td><td>${r.request_type==="deposit"?`<select class="payment-method-select" data-request-payment-id="${esc(r.id)}">${methodOptions}</select><div class="hint">Link the method actually used; this saves a snapshot for the customer.</div>`:`<span class="hint">Payout details are provided by the customer.</span>`}</td><td><select class="statusselect" data-status-id="${esc(r.id)}">${["pending_payment","payment_submitted","payment_confirmed","processing","completed","rejected","cancelled"].map(s=>`<option value="${s}" ${s===r.status?"selected":""}>${statusLabel(s)}</option>`).join("")}</select><textarea data-note-id="${esc(r.id)}" placeholder="Admin note" style="margin-top:6px;min-height:54px">${esc(r.admin_note||"")}</textarea><input data-payout-id="${esc(r.id)}" placeholder="Payout TXID (optional)" value="${esc(r.payout_txid||"")}" style="margin-top:6px"><button class="btn primary" data-save-id="${esc(r.id)}" style="margin-top:6px;padding:7px 9px">Save</button><button class="btn" data-hide-request-id="${esc(r.id)}" data-is-hidden="${getHiddenAdminIds().has(r.id)?"true":"false"}" style="margin-top:6px;padding:7px 9px">${getHiddenAdminIds().has(r.id)?"Restore to list":"Hide from list"}</button></td></tr>`}).join("")||'<tr><td colspan="8" class="empty">No matching transactions.</td></tr>';document.querySelectorAll("[data-save-id]").forEach(b=>b.addEventListener("click",()=>updateAdminRequest(b.dataset.saveId)));document.querySelectorAll("[data-hide-request-id]").forEach(b=>b.addEventListener("click",()=>setAdminRequestHidden(b.dataset.hideRequestId,b.dataset.isHidden!=="true")));const toggle=$("toggleHiddenRequests");if(toggle)toggle.textContent=showHiddenAdminRequests?"Hide archived from view":"Show hidden"}
 $("adminSearch").addEventListener("input",renderAdminRows);$("adminStatusFilter").addEventListener("change",renderAdminRows);$("adminTypeFilter")?.addEventListener("change",renderAdminRows);$("toggleHiddenRequests")?.addEventListener("click",()=>{showHiddenAdminRequests=!showHiddenAdminRequests;renderAdminRows()});$("adminRefresh").addEventListener("click",async()=>{await loadAdminRequests();await loadCompanies();await loadSettings();await loadPaymentAccounts()});
 async function updateAdminRequest(id){const status=document.querySelector(`[data-status-id="${id}"]`).value,note=document.querySelector(`[data-note-id="${id}"]`).value,payout=document.querySelector(`[data-payout-id="${id}"]`).value;const old=requests.find(r=>r.id===id);const update={status,admin_note:note,payout_txid:payout,processed_by:currentUser.id};const paymentSelect=document.querySelector(`[data-request-payment-id="${id}"]`);if(old?.request_type==="deposit"&&paymentSelect){const selectedId=paymentSelect.value||null;const account=paymentAccounts.find(a=>a.id===selectedId);update.payment_account_id=selectedId;update.payment_account_snapshot=account?{id:account.id,label:account.label,method_type:account.method_type,provider:account.provider,account_name:account.account_name,account_number:account.account_number,bank_name:account.bank_name,network:account.network,wallet_address:account.wallet_address,instructions:account.instructions}:null}if(status==="payment_confirmed")update.payment_confirmed_at=new Date().toISOString();if(status==="completed")update.processed_at=new Date().toISOString();try{const {error}=await sb.from("service_requests").update(update).eq("id",id);if(error)throw error;const eventType=status==="payment_confirmed"?"payment_confirmed":status==="completed"?"payout_sent":status==="rejected"?"payment_rejected":"note";await sb.from("payment_events").insert({request_id:id,event_type:eventType,txid:payout||old?.payment_txid||null,actor_id:currentUser.id,note:`Status changed to ${status}. ${note}`});await sb.from("audit_logs").insert({actor_id:currentUser.id,action:"request_status_updated",entity_type:"service_request",entity_id:id,details:{from:old?.status,to:status,payment_account_id:update.payment_account_id??old?.payment_account_id??null}});toast(old?.request_type==="deposit"&&paymentSelect?"Transaction updated, including payment instructions":"Transaction updated");await loadAdminRequests()}catch(err){toast(err.message||"Could not update request",true)}}
 function renderAdminCompanies(){if(!currentProfile||currentProfile.role!=="admin")return;$("adminCompanies").innerHTML=companies.map(c=>`<div class="company admin-company">${logoMarkup(c)}<span class="company-copy" style="flex:1"><strong>${esc(c.name)}</strong><small>${esc(c.category)}</small></span><label style="font-size:11px"><input type="checkbox" data-company-active="${esc(c.id)}" ${c.active?"checked":""} style="width:auto"> Active</label><button class="btn" data-company-save="${esc(c.id)}">Save</button></div>`).join("");bindLogoFallbacks($("adminCompanies"));document.querySelectorAll("[data-company-save]").forEach(b=>b.addEventListener("click",async()=>{const id=b.dataset.companySave,active=document.querySelector(`[data-company-active="${id}"]`).checked;const {error}=await sb.from("companies").update({active}).eq("id",id);if(error)toast(error.message,true);else{toast("Company updated and synced");await loadCompanies()}}))}
