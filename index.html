@@ -360,6 +360,118 @@ pre, code, td, th, p, h1, h2, h3, label, .hint, .notice { overflow-wrap: anywher
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; }
 }
+
+
+/* Ipay mobile compact header: keep navigation accessible without covering page content */
+@media (max-width: 620px) {
+  html { scroll-padding-top: 12px; }
+  .topbar { position: relative !important; top: auto !important; z-index: 20; }
+  .nav {
+    height: auto !important; min-height: 0 !important;
+    display: grid !important;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center; gap: 6px 8px !important;
+    padding: 7px 0 6px !important;
+  }
+  .brand { min-width: 0; gap: 6px; font-size: 14px; white-space: nowrap; }
+  .brandmark { width: 29px !important; height: 29px !important; flex-basis: 29px !important; border-radius: 9px; }
+  .navactions {
+    grid-column: 2; grid-row: 1;
+    display: flex !important; flex-wrap: nowrap !important;
+    justify-content: flex-end; align-items: center;
+    gap: 4px !important; min-width: 0; width: 100%;
+  }
+  .navactions .langselect { width: 66px !important; min-width: 0; max-width: 66px !important; padding: 6px 3px !important; font-size: 10px !important; }
+  .navactions .themeSelect { width: 76px !important; min-width: 0; max-width: 76px !important; padding: 6px 3px !important; font-size: 10px !important; }
+  .navactions #themeBtn { width: 31px !important; height: 31px !important; min-height: 31px !important; flex: 0 0 31px; font-size: 15px; }
+  .navactions #authBtn { min-height: 31px !important; padding: 6px 8px !important; font-size: 11px !important; white-space: nowrap; }
+  .navlinks {
+    grid-column: 1 / -1; grid-row: 2;
+    display: flex !important; width: 100%; min-width: 0;
+    gap: 3px !important; padding: 2px 0 1px !important;
+    overflow-x: auto !important; overflow-y: hidden;
+    white-space: nowrap; scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+  .navlinks a { flex: 0 0 auto; white-space: nowrap; font-size: 11px !important; padding: 6px 8px !important; }
+  .hero.app-page { padding-top: 22px !important; }
+}
+@media (max-width: 380px) {
+  .brand #brandName { display: none; }
+  .navactions .langselect { width: 59px !important; max-width: 59px !important; }
+  .navactions .themeSelect { width: 69px !important; max-width: 69px !important; }
+  .navlinks a { padding: 6px 7px !important; font-size: 10px !important; }
+}
+
+
+/* Ipay adaptive layout hardening: narrow viewports, DevTools device emulation,
+   portrait/landscape and intermediate tablet widths. Presentation-only overrides. */
+*, *::before, *::after { box-sizing: border-box; }
+html { width: 100%; max-width: 100%; overflow-x: clip; scroll-padding-block: 12px; }
+body { width: 100%; max-width: 100%; min-width: 0 !important; margin-inline: 0; overflow-x: clip; }
+main, header, footer, section, article, nav, form, .wrap, .nav, .app-page,
+.panel, .modal, .modalback, .admin-shell, .admin-content, .admin-page,
+.hero, .hero-card, .requestcard, .companygrid, .featuregrid, .howgrid,
+.footergrid, .stats, .formgrid, .field, .toolbar { min-width: 0; max-width: 100%; }
+img, video, iframe, canvas, svg { max-width: 100%; }
+input, select, textarea, button { min-width: 0; }
+input, select, textarea { max-width: 100%; }
+.grid, [class*="grid"] { min-width: 0; }
+.table-wrap, .table-responsive, .admin-content { overscroll-behavior-x: contain; }
+#authModal { max-width: 100vw; max-width: 100dvw; }
+#authModal .modal { min-width: 0; }
+#authModal .modalbody, #authModal .modal-content { min-width: 0; overflow-wrap: anywhere; }
+
+@media (max-width: 620px) {
+  .topbar { max-width: 100%; }
+  .nav { width: calc(100% - 20px) !important; grid-template-columns: minmax(0, 1fr); row-gap: 6px !important; }
+  .brand { grid-column: 1; grid-row: 1; max-width: 100%; }
+  .navactions { grid-column: 1; grid-row: 2; width: 100%; justify-content: flex-start !important; flex-wrap: wrap !important; }
+  .navlinks { grid-column: 1; grid-row: 3; width: 100%; max-width: 100%; }
+  .navlinks a { flex-shrink: 0; }
+  .hero.app-page { grid-template-columns: minmax(0, 1fr) !important; }
+  .featuregrid, .howgrid, .footergrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .companygrid, #page-companies .companygrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .formgrid { grid-template-columns: minmax(0, 1fr) !important; }
+  .field, .field.full { grid-column: 1 / -1; }
+  .admin-content { padding-inline: 10px !important; }
+  .admin-content table { min-width: 560px; }
+  .admin-content .table-wrap, .admin-content .table-responsive { overflow-x: auto; }
+}
+@media (max-width: 420px) {
+  .wrap, .nav { width: calc(100% - 16px) !important; }
+  .navactions { gap: 4px !important; }
+  .navactions .langselect { width: clamp(56px, 19vw, 70px) !important; max-width: clamp(56px, 19vw, 70px) !important; }
+  .navactions .themeSelect { width: clamp(62px, 22vw, 78px) !important; max-width: clamp(62px, 22vw, 78px) !important; }
+  .navactions #authBtn { white-space: normal !important; }
+  .featuregrid, .howgrid, .footergrid { grid-template-columns: minmax(0, 1fr); }
+  .companygrid, #page-companies .companygrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hero-card, .panel, .requestcard { padding: 12px !important; }
+  .stat, .company { min-width: 0; }
+  #authModal { padding-inline: max(6px, env(safe-area-inset-left)) !important; }
+  #authModal .modal { padding: clamp(10px, 3vw, 15px) !important; }
+}
+@media (max-width: 340px) {
+  .navactions { display: grid !important; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: stretch; }
+  .navactions .langselect, .navactions .themeSelect { width: 100% !important; max-width: 100% !important; }
+  .navactions #themeBtn, .navactions #authBtn { width: 100%; }
+  .navlinks a { font-size: 10px !important; padding: 6px !important; }
+  .companygrid, #page-companies .companygrid, .stats { grid-template-columns: minmax(0, 1fr) !important; }
+  .footergrid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-height: 520px) and (max-width: 900px) {
+  #authModal { place-items: start center; align-items: start; padding-block: max(6px, env(safe-area-inset-top)) max(6px, env(safe-area-inset-bottom)); }
+  #authModal .modal { max-height: calc(100vh - 12px); max-height: calc(100dvh - max(12px, env(safe-area-inset-top) + env(safe-area-inset-bottom))); margin-block: 0; }
+  #authModal .modalhead { position: static; }
+}
+@media (orientation: landscape) and (max-height: 500px) {
+  .hero.app-page { padding-block: 16px !important; }
+  #authModal .modal { max-height: calc(100vh - 12px); max-height: calc(100dvh - 12px); }
+}
+@supports (height: 100dvh) {
+  #authModal .modal { max-height: calc(100dvh - max(12px, env(safe-area-inset-top) + env(safe-area-inset-bottom))); }
+}
+
 </style>
 </head>
 <body>
